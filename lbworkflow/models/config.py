@@ -82,6 +82,8 @@ class ProcessReportLink(models.Model):
 class Process(models.Model):
     """
     A process holds the map that describes the flow of work.
+
+    描述工作流的业务流程
     """
     code = models.CharField(
         'Code', max_length=100, unique=True,
@@ -193,14 +195,16 @@ class Process(models.Model):
 class Node(models.Model):
     """
     Node is the states of an instance.
+
+    流程节点
     """
 
     STATUS_CHOICES = (
-        ('draft', 'Draft'),
-        ('given up', 'Given up'),
-        ('rejected', 'Rejected'),
-        ('in progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('draft', 'Draft'),                 # 草稿
+        ('given up', 'Given up'),           # 放弃
+        ('rejected', 'Rejected'),           # 拒绝
+        ('in progress', 'In Progress'),     # 处理中
+        ('completed', 'Completed'),         # 完成
     )
     AUDIT_PAGE_TYPE_CHOICES = (
         ('view', 'view'),
@@ -235,8 +239,11 @@ class Node(models.Model):
         'Status', max_length=16,
         default='node', choices=TYPE_CHOICES)
 
+    # 可编辑
     can_edit = models.BooleanField('Can edit', default=False)
+    # 可拒绝
     can_reject = models.BooleanField('Can reject', default=True)
+    # 可放弃
     can_give_up = models.BooleanField('Can give up', default=True)
 
     operators = models.TextField('Audit users', blank=True)
@@ -286,9 +293,10 @@ class Transition(models.Model):
     """
     A Transition connects two node: a From and a To activity.
     """
+    # 路由规则选择
     ROUTING_RULE_CHOICES = (
-        ('split', 'split'),
-        ('joint', 'Joint'),
+        ('split', 'split'),     # 分离
+        ('joint', 'Joint'),     # 联合
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     process = models.ForeignKey(
@@ -312,6 +320,7 @@ class Transition(models.Model):
         default=True,
         help_text='If user agreed in previous steps will auto agree',
     )
+    # 路由规则
     routing_rule = models.CharField(
         'Routing rule', max_length=16,
         default='split',

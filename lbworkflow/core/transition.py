@@ -17,6 +17,7 @@ def create_event(instance, transition, **kwargs):
 
 
 class TransitionExecutor(object):
+    """流转执行器"""
     def __init__(
             self, operator, instance, task, transition=None,
             comment='', attachments=[]):
