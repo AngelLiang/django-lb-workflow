@@ -31,6 +31,7 @@ class ProcessInstance(models.Model):
         null=True, on_delete=models.SET_NULL,
         related_name='instances')
 
+    # 内容类型，关联其他模型
     content_type = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE
@@ -385,6 +386,8 @@ class Event(models.Model):
 class BaseWFObj(models.Model):
     """
     A abstract class for flow model. Every flow model should inherit from it.
+
+    工作流的抽象类，每个工作流模型要继承它
     """
     pinstance = models.ForeignKey(
         ProcessInstance, blank=True, null=True,
@@ -402,12 +405,14 @@ class BaseWFObj(models.Model):
         abstract = True
 
     def get_process_no(self):
+        """获取流程编号"""
         instance = self.pinstance
         if instance and instance.pk:
             return '%s%s' % (instance.process.prefix, instance.pk)
         return ''
 
     def get_status(self):
+        """获取当前状态"""
         return self.pinstance.cur_node.status
 
     def get_process_summary(self):

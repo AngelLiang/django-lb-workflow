@@ -122,6 +122,7 @@ class Process(models.Model):
         return self.name
 
     def get_draft_active(self):
+        """获取草稿"""
         return get_or_none(Node, process=self, status='draft')
 
     def get_rejected_active(self):
